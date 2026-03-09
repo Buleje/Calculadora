@@ -1,28 +1,93 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Premium dark theme */
+  --background: #09090b;
+  --foreground: #fafafa;
+  
+  /* Calculator surfaces */
+  --calc-bg: #18181b;
+  --calc-surface: #27272a;
+  --calc-surface-hover: #3f3f46;
+  --calc-surface-active: #52525b;
+  
+  /* Button variants */
+  --btn-number: #27272a;
+  --btn-number-hover: #3f3f46;
+  --btn-number-active: #52525b;
+  
+  --btn-operator: #1e3a5f;
+  --btn-operator-hover: #2563eb;
+  --btn-operator-active: #1d4ed8;
+  
+  --btn-function: #1c1c1e;
+  --btn-function-hover: #2a2a2e;
+  --btn-function-active: #3a3a3e;
+  
+  --btn-equals: #10b981;
+  --btn-equals-hover: #34d399;
+  --btn-equals-active: #059669;
+  
+  --btn-action: #dc2626;
+  --btn-action-hover: #ef4444;
+  --btn-action-active: #b91c1c;
+  
+  /* Text colors */
+  --text-primary: #fafafa;
+  --text-secondary: #a1a1aa;
+  --text-muted: #71717a;
+  --text-accent: #10b981;
+  --text-function: #60a5fa;
+  --text-constant: #fbbf24;
+  --text-error: #f87171;
+  
+  /* Borders */
+  --border: #27272a;
+  --border-subtle: #1f1f23;
+  
+  --radius: 1rem;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-calc-bg: var(--calc-bg);
+  --color-calc-surface: var(--calc-surface);
+  --color-calc-surface-hover: var(--calc-surface-hover);
+  --color-calc-surface-active: var(--calc-surface-active);
+  --color-btn-number: var(--btn-number);
+  --color-btn-number-hover: var(--btn-number-hover);
+  --color-btn-number-active: var(--btn-number-active);
+  --color-btn-operator: var(--btn-operator);
+  --color-btn-operator-hover: var(--btn-operator-hover);
+  --color-btn-operator-active: var(--btn-operator-active);
+  --color-btn-function: var(--btn-function);
+  --color-btn-function-hover: var(--btn-function-hover);
+  --color-btn-function-active: var(--btn-function-active);
+  --color-btn-equals: var(--btn-equals);
+  --color-btn-equals-hover: var(--btn-equals-hover);
+  --color-btn-equals-active: var(--btn-equals-active);
+  --color-btn-action: var(--btn-action);
+  --color-btn-action-hover: var(--btn-action-hover);
+  --color-btn-action-active: var(--btn-action-active);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+  --color-text-accent: var(--text-accent);
+  --color-text-function: var(--text-function);
+  --color-text-constant: var(--text-constant);
+  --color-text-error: var(--text-error);
+  --color-border: var(--border);
+  --color-border-subtle: var(--border-subtle);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --radius: var(--radius);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
 }
 
 /* Hide scrollbars visually while keeping scroll functionality */
@@ -31,4 +96,35 @@ body {
 }
 .scrollbar-none::-webkit-scrollbar {
   display: none;
+}
+
+/* Premium button press effect */
+.calc-btn {
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.calc-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.calc-btn:active {
+  transform: translateY(1px) scale(0.98);
+  box-shadow: 0 0 0 rgba(0, 0, 0, 0.3), inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Glass effect for display */
+.glass-display {
+  background: linear-gradient(180deg, rgba(24, 24, 27, 0.9) 0%, rgba(24, 24, 27, 0.95) 100%);
+  backdrop-filter: blur(10px);
+}
+
+/* Subtle glow for equals button */
+.equals-glow {
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.3), 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.equals-glow:hover {
+  box-shadow: 0 0 30px rgba(16, 185, 129, 0.4), 0 6px 16px rgba(0, 0, 0, 0.4);
 }

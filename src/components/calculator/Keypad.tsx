@@ -1,6 +1,7 @@
 import type { CalcKey } from '@/types/calculator';
 
-const KEYS: CalcKey[][] = [
+// Scientific functions group
+const SCIENTIFIC_KEYS: CalcKey[][] = [
   [
     { label: 'sin',   value: 'sin(',  type: 'function' },
     { label: 'cos',   value: 'cos(',  type: 'function' },
@@ -9,61 +10,77 @@ const KEYS: CalcKey[][] = [
     { label: 'ln',    value: 'ln(',   type: 'function' },
   ],
   [
-    { label: 'sin⁻¹', value: 'asin(', type: 'function' },
-    { label: 'cos⁻¹', value: 'acos(', type: 'function' },
-    { label: 'tan⁻¹', value: 'atan(', type: 'function' },
-    { label: '(',      value: '(',     type: 'operator' },
-    { label: ')',      value: ')',     type: 'operator' },
+    { label: 'sin\u207b\u00b9', value: 'asin(', type: 'function' },
+    { label: 'cos\u207b\u00b9', value: 'acos(', type: 'function' },
+    { label: 'tan\u207b\u00b9', value: 'atan(', type: 'function' },
+    { label: 'x\u00b2',  value: '^2',    type: 'function' },
+    { label: 'x\u02b8', value: '^',   type: 'operator' },
   ],
   [
-    { label: 'x²',  value: '^2',    type: 'function' },
-    { label: '√',   value: 'sqrt(', type: 'function' },
-    { label: '∛',   value: 'cbrt(', type: 'function' },
-    { label: 'π',   value: 'pi',    type: 'constant' },
+    { label: '\u221a',   value: 'sqrt(', type: 'function' },
+    { label: '\u221b',   value: 'cbrt(', type: 'function' },
+    { label: '\u03c0',   value: 'pi',    type: 'constant' },
     { label: 'e',   value: 'e',     type: 'constant' },
+    { label: '%',   value: '%',     type: 'operator' },
+  ],
+];
+
+// Main number pad with operators
+const NUMBER_KEYS: CalcKey[][] = [
+  [
+    { label: '(',   value: '(',   type: 'operator' },
+    { label: ')',   value: ')',   type: 'operator' },
+    { label: 'AC',  value: 'AC',  type: 'action' },
+    { label: '\u232b',  value: 'DEL', type: 'action' },
   ],
   [
-    { label: '7',  value: '7',   type: 'number' },
-    { label: '8',  value: '8',   type: 'number' },
-    { label: '9',  value: '9',   type: 'number' },
-    { label: '⌫',  value: 'DEL', type: 'action' },
-    { label: 'AC', value: 'AC',  type: 'action' },
+    { label: '7', value: '7', type: 'number' },
+    { label: '8', value: '8', type: 'number' },
+    { label: '9', value: '9', type: 'number' },
+    { label: '\u00f7', value: '/', type: 'operator' },
   ],
   [
     { label: '4', value: '4', type: 'number' },
     { label: '5', value: '5', type: 'number' },
     { label: '6', value: '6', type: 'number' },
-    { label: '×', value: '*', type: 'operator' },
-    { label: '÷', value: '/', type: 'operator' },
+    { label: '\u00d7', value: '*', type: 'operator' },
   ],
   [
     { label: '1', value: '1', type: 'number' },
     { label: '2', value: '2', type: 'number' },
     { label: '3', value: '3', type: 'number' },
-    { label: '+', value: '+', type: 'operator' },
-    { label: '−', value: '-', type: 'operator' },
+    { label: '\u2212', value: '-', type: 'operator' },
   ],
   [
-    { label: '±',  value: 'NEG', type: 'action' },
+    { label: '\u00b1',  value: 'NEG', type: 'action' },
     { label: '0',  value: '0',   type: 'number' },
     { label: '.',  value: '.',   type: 'number' },
-    { label: 'xʸ', value: '^',   type: 'operator' },
-    { label: '=',  value: '=',   type: 'equals' },
+    { label: '+', value: '+', type: 'operator' },
   ],
 ];
 
+const EQUALS_KEY: CalcKey = { label: '=', value: '=', type: 'equals' };
+
 function getKeyClass(key: CalcKey): string {
+  const baseClass = 'calc-btn rounded-xl flex items-center justify-center select-none font-medium';
+  
   if (key.value === 'AC') {
-    return 'bg-rose-600/80 hover:bg-rose-600 active:bg-rose-700 text-white font-semibold text-sm';
+    return `${baseClass} bg-btn-action hover:bg-btn-action-hover active:bg-btn-action-active text-text-primary font-semibold text-sm`;
   }
+  
+  if (key.value === 'DEL') {
+    return `${baseClass} bg-calc-surface hover:bg-calc-surface-hover active:bg-calc-surface-active text-text-error text-lg`;
+  }
+  
   const map: Record<string, string> = {
-    number:   'bg-zinc-700 hover:bg-zinc-600 active:bg-zinc-500 text-white text-xl font-medium',
-    operator: 'bg-zinc-600 hover:bg-zinc-500 active:bg-zinc-400 text-white text-lg font-medium',
-    function: 'bg-zinc-800 hover:bg-zinc-700 active:bg-zinc-600 text-indigo-300 text-xs font-semibold',
-    constant: 'bg-zinc-800 hover:bg-zinc-700 active:bg-zinc-600 text-amber-300 text-base font-semibold',
-    action:   'bg-zinc-600 hover:bg-zinc-500 active:bg-zinc-400 text-zinc-100 text-lg',
-    equals:   'bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white text-xl font-bold',
+    number:   `${baseClass} bg-btn-number hover:bg-btn-number-hover active:bg-btn-number-active text-text-primary text-xl`,
+    operator: `${baseClass} bg-btn-operator hover:bg-btn-operator-hover active:bg-btn-operator-active text-text-primary text-lg font-semibold`,
+    function: `${baseClass} bg-btn-function hover:bg-btn-function-hover active:bg-btn-function-active text-text-function text-xs font-semibold tracking-tight`,
+    constant: `${baseClass} bg-btn-function hover:bg-btn-function-hover active:bg-btn-function-active text-text-constant text-base font-semibold`,
+    action:   `${baseClass} bg-calc-surface hover:bg-calc-surface-hover active:bg-calc-surface-active text-text-secondary text-lg`,
+    equals:   `${baseClass} equals-glow bg-btn-equals hover:bg-btn-equals-hover active:bg-btn-equals-active text-calc-bg text-2xl font-bold`,
   };
+  
   return map[key.type] ?? map['number'];
 }
 
@@ -73,16 +90,46 @@ interface KeypadProps {
 
 export default function Keypad({ onKey }: KeypadProps) {
   return (
-    <div className="grid grid-cols-5 gap-2 p-3 pb-4">
-      {KEYS.flat().map((key, i) => (
+    <div className="p-4 space-y-4">
+      {/* Scientific functions section */}
+      <div className="space-y-2">
+        <p className="text-text-muted text-[10px] uppercase tracking-widest font-semibold px-1">Functions</p>
+        <div className="grid grid-cols-5 gap-2">
+          {SCIENTIFIC_KEYS.flat().map((key, i) => (
+            <button
+              key={`sci-${i}`}
+              onClick={() => onKey(key.value)}
+              className={`${getKeyClass(key)} h-10`}
+            >
+              {key.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Divider */}
+      <div className="h-px bg-border-subtle" />
+
+      {/* Main number pad */}
+      <div className="grid grid-cols-4 gap-2.5">
+        {NUMBER_KEYS.flat().map((key, i) => (
+          <button
+            key={`num-${i}`}
+            onClick={() => onKey(key.value)}
+            className={`${getKeyClass(key)} h-14`}
+          >
+            {key.label}
+          </button>
+        ))}
+        
+        {/* Equals button spans full width */}
         <button
-          key={i}
-          onClick={() => onKey(key.value)}
-          className={`${getKeyClass(key)} h-12 rounded-xl transition-all duration-75 active:scale-95 select-none flex items-center justify-center`}
+          onClick={() => onKey(EQUALS_KEY.value)}
+          className={`${getKeyClass(EQUALS_KEY)} h-14 col-span-4`}
         >
-          {key.label}
+          {EQUALS_KEY.label}
         </button>
-      ))}
+      </div>
     </div>
   );
 }

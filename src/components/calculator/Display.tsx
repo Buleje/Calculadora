@@ -9,26 +9,26 @@ interface DisplayProps {
 
 export default function Display({ expression, result, isError, justEvaluated }: DisplayProps) {
   const resultColor = isError
-    ? 'text-red-400'
+    ? 'text-text-error'
     : justEvaluated
-    ? 'text-white'
-    : result === '0'
-    ? 'text-zinc-600'
-    : 'text-zinc-200';
+      ? 'text-text-primary'
+      : result === '0'
+        ? 'text-text-muted'
+        : 'text-text-secondary';
 
   return (
-    <div className="px-6 py-4 flex flex-col justify-end gap-1.5 min-h-31.5 select-none border-b border-zinc-800/60">
+    <div className="glass-display px-6 py-6 flex flex-col justify-end gap-3 min-h-36 select-none border-b border-border-subtle">
       {/* Expression line */}
       <div className="overflow-x-auto scrollbar-none">
-        <p className="text-zinc-500 text-sm font-mono text-right whitespace-nowrap min-h-4.5 leading-relaxed">
-          {expression ? formatExpression(expression) : ''}
+        <p className="text-text-muted text-base font-mono text-right whitespace-nowrap min-h-6 leading-relaxed tracking-wide">
+          {expression ? formatExpression(expression) : '\u00A0'}
         </p>
       </div>
 
       {/* Result line */}
       <div className="overflow-x-auto scrollbar-none">
         <p
-          className={`font-mono font-light text-right whitespace-nowrap text-4xl tracking-tight transition-colors duration-100 ${resultColor}`}
+          className={`font-mono font-extralight text-right whitespace-nowrap text-5xl sm:text-6xl tracking-tight transition-all duration-200 ${resultColor}`}
         >
           {result}
         </p>

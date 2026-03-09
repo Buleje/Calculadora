@@ -15,14 +15,12 @@ interface Committed {
 
 export default function CalculatorShell() {
   const [expression, setExpression] = useState('');
-  // `committed` holds the result of the last = press (or the cleared '0' state)
   const [committed, setCommitted] = useState<Committed>({ value: '0', isError: false });
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [angleMode, setAngleMode] = useState<AngleMode>('deg');
   const [justEvaluated, setJustEvaluated] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
 
-  // Live result computed during render — no useEffect needed, no cascading setState
   const displayed = useMemo<Committed>(() => {
     if (!expression || justEvaluated) return committed;
     try {
@@ -30,7 +28,7 @@ export default function CalculatorShell() {
       const fmt = formatNumber(val);
       return { value: fmt, isError: fmt === 'Error' };
     } catch {
-      return committed; // keep the last valid result while typing an incomplete expression
+      return committed;
     }
   }, [expression, angleMode, justEvaluated, committed]);
 
@@ -90,7 +88,6 @@ export default function CalculatorShell() {
         default: {
           const isOperator = /^[+\-*/^%]$/.test(value);
           if (justEvaluated) {
-            // After =: operators continue from the result; anything else starts fresh
             setExpression(isOperator ? (prev) => prev + value : value);
             setJustEvaluated(false);
           } else {
@@ -102,7 +99,6 @@ export default function CalculatorShell() {
     [expression, angleMode, justEvaluated],
   );
 
-  // Physical keyboard support
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.metaKey || e.ctrlKey || e.altKey) return;
@@ -131,61 +127,68 @@ export default function CalculatorShell() {
   };
 
   return (
-    <div className="flex flex-col lg:flex-row items-start gap-4 w-full max-w-2xl">
-      {/* ── Calculator card ── */}
-      <div className="flex flex-col w-full sm:w-88 mx-auto lg:mx-0 bg-zinc-900 rounded-3xl overflow-hidden shadow-2xl shadow-black/60 ring-1 ring-white/5">
-        {/* Top bar: brand + DEG/RAD toggle + history toggle */}
-        <div className="flex items-center justify-between px-4 pt-4 pb-2">
-          <span className="text-zinc-500 text-xs font-bold tracking-widest uppercase">
-            CalcPro
-          </span>
-
-          <div className="flex items-center gap-0.5 bg-zinc-800 rounded-full p-0.5">
-            <button
-              onClick={() => setAngleMode('deg')}
-              className={`px-3 py-1 rounded-full text-xs font-semibold transition-colors ${
-                angleMode === 'deg'
-                  ? 'bg-indigo-600 text-white shadow-sm'
-                  : 'text-zinc-400 hover:text-zinc-200'
-              }`}
-            >
-              DEG
-            </button>
-            <button
-              onClick={() => setAngleMode('rad')}
-              className={`px-3 py-1 rounded-full text-xs font-semibold transition-colors ${
-                angleMode === 'rad'
-                  ? 'bg-indigo-600 text-white shadow-sm'
-                  : 'text-zinc-400 hover:text-zinc-200'
-              }`}
-            >
-              RAD
-            </button>
+    <div className="flex flex-col lg:flex-row items-start gap-6 w-full max-w-3xl">
+      {/* Calculator card */}
+      <div className="flex flex-col w-full sm:w-96 mx-auto lg:mx-0 bg-calc-bg rounded-3xl overflow-hidden shadow-2xl shadow-black/60 border border-border">
+        {/* Top bar */}
+        <div className="flex items-center justify-between px-5 pt-5 pb-3">
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 rounded-full bg-btn-equals" />
+            <span className="text-text-muted text-xs font-bold tracking-widest uppercase">
+              CalcPro
+            </span>
           </div>
 
-          <button
-            onClick={() => setShowHistory((h) => !h)}
-            aria-label="Toggle history"
-            className={`p-1.5 rounded-lg transition-colors ${
-              showHistory
-                ? 'text-indigo-400 bg-indigo-500/10'
-                : 'text-zinc-500 hover:text-zinc-300'
-            }`}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="w-4 h-4"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+          <div className="flex items-center gap-3">
+            {/* DEG/RAD toggle */}
+            <div className="flex items-center gap-0.5 bg-btn-function rounded-lg p-0.5">
+              <button
+                onClick={() => setAngleMode('deg')}
+                className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-all duration-200 ${
+                  angleMode === 'deg'
+                    ? 'bg-btn-operator text-text-primary shadow-sm'
+                    : 'text-text-muted hover:text-text-secondary'
+                }`}
+              >
+                DEG
+              </button>
+              <button
+                onClick={() => setAngleMode('rad')}
+                className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-all duration-200 ${
+                  angleMode === 'rad'
+                    ? 'bg-btn-operator text-text-primary shadow-sm'
+                    : 'text-text-muted hover:text-text-secondary'
+                }`}
+              >
+                RAD
+              </button>
+            </div>
+
+            {/* History toggle */}
+            <button
+              onClick={() => setShowHistory((h) => !h)}
+              aria-label="Toggle history"
+              className={`p-2 rounded-lg transition-all duration-200 ${
+                showHistory
+                  ? 'text-text-accent bg-btn-equals/10'
+                  : 'text-text-muted hover:text-text-secondary hover:bg-btn-function'
+              }`}
             >
-              <circle cx="12" cy="12" r="9" />
-              <path d="M12 8v4l3 3" />
-            </svg>
-          </button>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-4 h-4"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12 6 12 12 16 14" />
+              </svg>
+            </button>
+          </div>
         </div>
 
         <Display
@@ -198,7 +201,7 @@ export default function CalculatorShell() {
         <Keypad onKey={handleKey} />
       </div>
 
-      {/* ── History panel ── */}
+      {/* History panel */}
       {showHistory && (
         <HistoryPanel
           history={history}
